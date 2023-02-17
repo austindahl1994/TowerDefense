@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class TilemapManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static TilemapManager Instance;
+    
+    private void Awake()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (Instance == null) {
+            Instance = this;
+        }
     }
 }
+
+
