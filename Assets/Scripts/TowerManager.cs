@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+//This script is for placing turrets on tiles located on a tilemap grid
 public class TowerManager : MonoBehaviour
 {
     public static TowerManager Instance;

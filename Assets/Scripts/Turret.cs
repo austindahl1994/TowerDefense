@@ -2,58 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//This script will take a scriptable object for values, type, firing radius, etc.
+//controlls turret behavior, which is looking at the mouse currently, eventually 
+//will target enemies that enter a circle collider
 public class Turret : MonoBehaviour
 {
-    public static Turret Instance;
+    [SerializeField] private bool lookAtTarget; //some towers might not have to look at target
+    [SerializeField] private float radius = 10.0f; //will hold the radius for finding enemies
+    private ProjectileManager projectileManager;
 
-
-    [SerializeField] private bool lookAtTarget;
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private int poolSize = 10;
-    [SerializeField] private float radius = 10.0f;
-    [SerializeField] private Transform[] projectileSpawnPoints;
-
-    private List<GameObject> pooledProjectiles = new List<GameObject>();
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-    }
-
-    //creates a certain amount of projectiles to be added to pool
+    //projectileManager is attached to turret as well as this script to help with projectile pooling
     private void Start()
     {
-
-        for (int i = 0; i < poolSize; i++)
-        {
-            GameObject projectile = Instantiate(projectilePrefab);
-            projectile.SetActive(false);
-            pooledProjectiles.Add(projectile);
-        }
+        projectileManager = GetComponent<ProjectileManager>();
     }
 
     private void Update()
     {
-        
-    }
+        //Test code to have the turret look at the mouse, update so it looks at enemy
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = transform.position.z;
+        transform.up = mousePosition - transform.position;
 
-    //Returns projectile from pooled projectiles, if no more in there will create more as needed
-    public GameObject GetProjectile()
-    {
-        for (int i = 0; i < pooledProjectiles.Count; i++)
+        if (Input.GetMouseButtonDown(0))
         {
-            if (!pooledProjectiles[i].activeInHierarchy)
-            {
-                return pooledProjectiles[i];
-            }
+            projectileManager.fireProjectile();
         }
-
-        GameObject projectile = Instantiate(projectilePrefab);
-        pooledProjectiles.Add(projectile);
-        return projectile;
     }
-
-
 }
